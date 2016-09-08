@@ -45,7 +45,7 @@ class Extractor(caffe.Net):
 
     def extract_feature(self, image):
         in_ = self.inputs[0]
-        self.blobs[in_].data[...] = self.transformer.preprocess(in_, caffe.io.load_image(image))
+        self.blobs[in_].data[...] = self.transformer.preprocess(in_, caffe.io.load_image(image[0]))
         feature = self.forward(**{'blobs': self.features})
         feature = {blob: vals[0] for blob, vals in feature.iteritems()}
         return feature
@@ -61,24 +61,26 @@ def extractor_factory():
 def vis_square(data, padsize=1, padval=0):
     data -= data.min()
     data /= data.max()
-    
+
     # force the number of filters to be square
     n = int(np.ceil(np.sqrt(data.shape[0])))
     padding = ((0, n ** 2 - data.shape[0]), (0, padsize), (0, padsize)) + ((0, 0),) * (data.ndim - 3)
     data = np.pad(data, padding, mode='constant', constant_values=(padval, padval))
-    
+
     # tile the filters into an image
     data = data.reshape((n, n) + data.shape[1:]).transpose((0, 2, 1, 3) + tuple(range(4, data.ndim + 1)))
     data = data.reshape((n * data.shape[1], n * data.shape[3]) + data.shape[4:])
 
     plt.imshow(data)
     plt.savefig("visualize_conv.jpg")
+    print("conv1 filter visualizations saved to visualize_conv.jpg")
     plt.close()
 
 def vis_fc(feature):
     plt.plot(feature)
     plt.xlim(xmax=feature.shape[0])
     plt.savefig("visualize_fc.jpg")
+    print("fc7 feature plot saved to visualize_fc.jpg")
     plt.close()
 
 def main():
@@ -90,7 +92,7 @@ def main():
     )
     parser.add_argument(
         "--pretrained_model",
-        default=os.path.join(caffe_root, 
+        default=os.path.join(caffe_root,
             "models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel"),
     )
     parser.add_argument(
@@ -115,13 +117,15 @@ def main():
         caffe.set_mode_gpu()
     else:
         caffe.set_mode_cpu()
-        
+
     extractor = Extractor(args.model_def, args.pretrained_model, args.mean_file)
 
     feature = extractor.extract_feature(args.image)
     vis_fc(feature['fc7'])
     filters = extractor.params['conv1'][0].data
     vis_square(filters.transpose(0,2,3,1))
+    np.save('feature.npy', feature);
+    print("All features saved to feature.npy");
 
 if __name__ == "__main__":
     main()
