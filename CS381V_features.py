@@ -9,7 +9,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-get_ipython().magic(u'matplotlib inline')
+#get_ipython().magic(u'matplotlib inline')
 
 # Make sure that caffe is on the python path:
 caffe_root = '/Users/dineshj/caffe/'  # this file is expected to be in {caffe_root}/examples
