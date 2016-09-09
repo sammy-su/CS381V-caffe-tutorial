@@ -11,7 +11,8 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 os.environ["GLOG_minloglevel"] = "3"
-caffe_root = '/work/01932/dineshj/CS381V/caffe_install_scripts/caffe'
+#caffe_root = '/work/01932/dineshj/CS381V/caffe_install_scripts/caffe'
+caffe_root = '<path-to-your-copy-of-caffe>'
 pycaffe_dir = os.path.join(caffe_root, 'python')
 sys.path.append(pycaffe_dir)
 
