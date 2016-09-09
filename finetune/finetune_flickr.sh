@@ -1,7 +1,8 @@
 #!/bin/sh
 
 
-CAFFE_ROOT="/work/01932/dineshj/CS381V/caffe_install_scripts/caffe"
+#CAFFE_ROOT="/work/01932/dineshj/caffe/"
+CAFFE_ROOT="<path-to-your-copy-of-caffe>"
 CAFFE_TOOL="${CAFFE_ROOT}/build/tools"
 CAFFE_DATA="${CAFFE_ROOT}/data/flickr_style"
 CAFFE_MODEL="${CAFFE_ROOT}/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel"
